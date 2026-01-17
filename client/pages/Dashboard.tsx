@@ -11,8 +11,8 @@ const Dashboard: React.FC = () => {
   return (
     <DashboardLayout>
       {/* Key Metrics Row */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-bold text-aadhaar-blue mb-6">Key Metrics</h2>
+      <section className="mb-8 md:mb-12">
+        <h2 className="text-xl md:text-2xl font-bold text-aadhaar-blue mb-4 md:mb-6">Key Metrics</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <MetricCard
             icon="🏛️"
