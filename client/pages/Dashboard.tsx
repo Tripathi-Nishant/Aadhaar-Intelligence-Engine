@@ -50,19 +50,6 @@ const Dashboard: React.FC = () => {
         </div>
       </section>
 
-      {/* National Health Map Section */}
-      <section className="mb-8 md:mb-12">
-        <SectionHeader
-          title="National Health Map"
-          subtitle="Interactive visualization of state-wise health scores"
-        />
-        <ChartPlaceholder
-          title="India State-wise Health Scores"
-          description="Interactive map showing state-wise health scores (color-coded: green = healthy, orange = warning, red = critical)"
-          height="350px"
-        />
-      </section>
-
       {/* Top and Bottom Performers */}
       <section className="mb-8 md:mb-12">
         <h2 className="text-xl md:text-2xl font-bold text-aadhaar-blue mb-4 md:mb-6">
@@ -71,25 +58,19 @@ const Dashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Top 5 Performers */}
           <div>
-            <div className="bg-gradient-to-r from-aadhaar-green to-emerald-600 rounded-lg p-4 mb-4 border-l-4 border-aadhaar-saffron">
-              <h3 className="text-white font-bold text-lg">Top 5 Performers</h3>
-            </div>
-            <ChartPlaceholder
-              title="Horizontal Bar Chart"
-              description="State names on Y-axis, Health Scores on X-axis"
-              height="300px"
+            <PerformanceBarChart
+              data={topPerformers}
+              title="Top 5 Performers"
+              color="#138808"
             />
           </div>
 
           {/* Bottom 5 States */}
           <div>
-            <div className="bg-gradient-to-r from-red-500 to-orange-500 rounded-lg p-4 mb-4 border-l-4 border-aadhaar-saffron">
-              <h3 className="text-white font-bold text-lg">Bottom 5 States</h3>
-            </div>
-            <ChartPlaceholder
-              title="Horizontal Bar Chart"
-              description="States requiring immediate intervention"
-              height="300px"
+            <PerformanceBarChart
+              data={bottomPerformers}
+              title="Bottom 5 States (Requiring Intervention)"
+              color="#DC2626"
             />
           </div>
         </div>
