@@ -4,10 +4,15 @@ import {
   MetricCard,
   SectionHeader,
   InfoBox,
-  ChartPlaceholder,
 } from "@/components/AadhaarUI";
+import { getAggregateStats, getTopPerformers, getBottomPerformers } from "@/lib/aadhaarData";
+import { PerformanceBarChart } from "@/components/Charts";
 
 const Dashboard: React.FC = () => {
+  const stats = getAggregateStats();
+  const topPerformers = getTopPerformers(5);
+  const bottomPerformers = getBottomPerformers(5);
+
   return (
     <DashboardLayout>
       {/* Key Metrics Row */}
@@ -17,28 +22,28 @@ const Dashboard: React.FC = () => {
           <MetricCard
             icon="🏛️"
             label="States Analyzed"
-            value="30+"
+            value={stats.totalStates}
             subtext="✓ Complete Coverage"
             valueColor="blue"
           />
           <MetricCard
             icon="💯"
             label="Avg Health Score"
-            value="67.3"
+            value={stats.avgHealthScore.toFixed(1)}
             subtext="National Average"
-            valueColor="green"
+            valueColor={stats.avgHealthScore > 70 ? "green" : stats.avgHealthScore > 50 ? "orange" : "red"}
           />
           <MetricCard
             icon="⚠️"
             label="Critical States"
-            value="8"
+            value={stats.criticalStates}
             subtext="Need Urgent Action"
             valueColor="red"
           />
           <MetricCard
             icon="🔍"
             label="Anomalies"
-            value="45"
+            value={stats.anomalies}
             subtext="Detected Issues"
             valueColor="orange"
           />
