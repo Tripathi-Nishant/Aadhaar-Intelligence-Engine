@@ -104,6 +104,10 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -117,5 +121,33 @@
   code {
     overflow-x: auto;
     white-space: pre;
+  }
+
+  /* Smooth transitions */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    transition: all 0.3s ease;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--aadhaar-orange));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--aadhaar-blue));
   }
 }
