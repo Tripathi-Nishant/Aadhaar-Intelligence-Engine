@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
       </section>
 
       {/* National Health Map Section */}
-      <section className="mb-12">
+      <section className="mb-8 md:mb-12">
         <SectionHeader
           title="National Health Map"
           subtitle="Interactive visualization of state-wise health scores"
@@ -54,13 +54,13 @@ const Dashboard: React.FC = () => {
         <ChartPlaceholder
           title="India State-wise Health Scores"
           description="Interactive map showing state-wise health scores (color-coded: green = healthy, orange = warning, red = critical)"
-          height="500px"
+          height="350px"
         />
       </section>
 
       {/* Top and Bottom Performers */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-bold text-aadhaar-blue mb-6">
+      <section className="mb-8 md:mb-12">
+        <h2 className="text-xl md:text-2xl font-bold text-aadhaar-blue mb-4 md:mb-6">
           Performance Analysis
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
