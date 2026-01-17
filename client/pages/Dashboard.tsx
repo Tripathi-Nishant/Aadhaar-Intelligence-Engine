@@ -83,27 +83,28 @@ const Dashboard: React.FC = () => {
             <li className="flex items-start">
               <span className="mr-3">•</span>
               <span>
-                <strong>Uttar Pradesh leads</strong> with Health Score of 85.2
+                <strong>{topPerformers[0]?.state} leads</strong> with Health Score of{" "}
+                {topPerformers[0]?.healthScore.toFixed(1)}
               </span>
             </li>
             <li className="flex items-start">
               <span className="mr-3">•</span>
               <span>
-                <strong>8 states require immediate intervention</strong> with
+                <strong>{stats.criticalStates} states require immediate intervention</strong> with
                 scores below 45
               </span>
             </li>
             <li className="flex items-start">
               <span className="mr-3">•</span>
               <span>
-                <strong>National average EQI: 0.712</strong> indicating good
-                enrolment quality
+                <strong>National average Health Score: {stats.avgHealthScore.toFixed(1)}</strong>{" "}
+                indicating {stats.avgHealthScore > 70 ? "good" : "moderate"} system health
               </span>
             </li>
             <li className="flex items-start">
               <span className="mr-3">•</span>
               <span>
-                <strong>45 anomalies detected</strong> across 12 states requiring
+                <strong>{stats.anomalies} anomalies detected</strong> across multiple states requiring
                 investigation
               </span>
             </li>
