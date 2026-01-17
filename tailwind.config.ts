@@ -57,6 +57,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        aadhaar: {
+          orange: "#FF6B35",
+          blue: "#004E89",
+          saffron: "#FF9933",
+          green: "#138808",
+          "light-gray": "#F8F9FA",
+          "light-orange": "#FFF9F0",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
