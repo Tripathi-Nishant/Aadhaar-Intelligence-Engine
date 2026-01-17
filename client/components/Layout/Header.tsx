@@ -3,7 +3,7 @@ import React from "react";
 export const Header: React.FC = () => {
   return (
     <header
-      className="w-full bg-gradient-to-r from-aadhaar-orange via-white to-aadhaar-green rounded-lg md:rounded-2xl m-2 md:m-4 shadow-lg"
+      className="w-full bg-gradient-to-r from-aadhaar-orange via-white to-aadhaar-green rounded-lg md:rounded-2xl mx-2 md:mx-4 mt-2 md:mt-4 mb-4 md:mb-4 shadow-lg"
       style={{
         borderBottom: "3px solid #FF6B35",
         boxShadow: "0 8px 32px rgba(0, 78, 137, 0.3)",
