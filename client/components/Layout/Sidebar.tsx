@@ -37,10 +37,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       <aside
         className={cn(
           "fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-aadhaar-blue to-blue-800",
-          "border-r-4 border-aadhaar-orange p-6 flex flex-col shadow-xl",
-          "transform transition-transform duration-300",
-          "md:translate-x-0 md:relative md:h-auto md:flex md:flex-col md:w-full",
-          isOpen ? "translate-x-0" : "-translate-x-full",
+          "border-r-4 border-aadhaar-orange p-6 flex flex-col shadow-xl z-40",
+          "transform transition-transform duration-300 md:transform-none",
+          "md:fixed md:left-0 md:top-0 md:h-full md:w-64 md:translate-x-0",
+          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
           className
         )}
       >
