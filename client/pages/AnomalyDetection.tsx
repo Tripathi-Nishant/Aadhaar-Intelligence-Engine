@@ -1,94 +1,84 @@
 import React, { useState } from "react";
 import { DashboardLayout } from "@/components/Layout";
-import { SectionHeader, GradientCard, ChartPlaceholder } from "@/components/AadhaarUI";
+import { SectionHeader, GradientCard } from "@/components/AadhaarUI";
 import { Input } from "@/components/ui/input";
+import { getStateMetrics } from "@/lib/aadhaarData";
 
-const anomaliesData = [
-  {
-    id: 1,
-    state: "Bihar",
-    year: 2024,
-    month: "Jan",
-    updateRate: 0.28,
-    severity: "Critical",
-    enrolments: 125000,
-  },
-  {
-    id: 2,
-    state: "Jharkhand",
-    year: 2024,
-    month: "Feb",
-    updateRate: 0.32,
-    severity: "Critical",
-    enrolments: 98000,
-  },
-  {
-    id: 3,
-    state: "Assam",
-    year: 2024,
-    month: "Jan",
-    updateRate: 0.25,
-    severity: "Warning",
-    enrolments: 87000,
-  },
-  {
-    id: 4,
-    state: "Manipur",
-    year: 2023,
-    month: "Nov",
-    updateRate: 0.31,
-    severity: "Critical",
-    enrolments: 45000,
-  },
-  {
-    id: 5,
-    state: "Meghalaya",
-    year: 2023,
-    month: "Dec",
-    updateRate: 0.26,
-    severity: "Warning",
-    enrolments: 38000,
-  },
-  {
-    id: 6,
-    state: "Mizoram",
-    year: 2024,
-    month: "Mar",
-    updateRate: 0.29,
-    severity: "Warning",
-    enrolments: 32000,
-  },
-  {
-    id: 7,
-    state: "Nagaland",
-    year: 2023,
-    month: "Oct",
-    updateRate: 0.27,
-    severity: "Critical",
-    enrolments: 28000,
-  },
-  {
-    id: 8,
-    state: "Tripura",
-    year: 2024,
-    month: "Feb",
-    updateRate: 0.24,
-    severity: "Warning",
-    enrolments: 25000,
-  },
-];
+interface Anomaly {
+  id: number;
+  state: string;
+  year: number;
+  month: string;
+  updateRate: number;
+  severity: "Critical" | "Warning";
+  enrolments: number;
+}
+
+function generateAnomalies(): Anomaly[] {
+  const stateMetrics = getStateMetrics();
+  const anomalies: Anomaly[] = [];
+  const months = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+
+  let id = 1;
+
+  stateMetrics.forEach((metric) => {
+    // High bio update rates are anomalies (> 5%)
+    if (metric.bioUpdateRate > 5) {
+      anomalies.push({
+        id: id++,
+        state: metric.state,
+        year: 2025,
+        month: months[Math.floor(Math.random() * months.length)],
+        updateRate: metric.bioUpdateRate,
+        severity: metric.bioUpdateRate > 20 ? "Critical" : "Warning",
+        enrolments: Math.floor(metric.totalEnrolments * 0.1),
+      });
+    }
+    
+    // Low friction index (< 0.1) but high enrolments could be anomaly
+    if (metric.frictionIndex < 0.1 && metric.totalEnrolments > 50000) {
+      anomalies.push({
+        id: id++,
+        state: metric.state,
+        year: 2025,
+        month: months[Math.floor(Math.random() * months.length)],
+        updateRate: metric.frictionIndex * 100,
+        severity: "Warning",
+        enrolments: Math.floor(metric.totalEnrolments * 0.05),
+      });
+    }
+
+    // Low EQI (< 0.5) indicates quality issues
+    if (metric.eqi < 0.5) {
+      anomalies.push({
+        id: id++,
+        state: metric.state,
+        year: 2025,
+        month: months[Math.floor(Math.random() * months.length)],
+        updateRate: (1 - metric.eqi) * 100,
+        severity: "Critical",
+        enrolments: Math.floor(metric.totalEnrolments * 0.15),
+      });
+    }
+  });
+
+  return anomalies.slice(0, 15).sort((a, b) => {
+    if (a.severity === "Critical" && b.severity !== "Critical") return -1;
+    if (a.severity !== "Critical" && b.severity === "Critical") return 1;
+    return 0;
+  });
+}
 
 const AnomalyDetection: React.FC = () => {
+  const anomalies = generateAnomalies();
   const [searchTerm, setSearchTerm] = useState("");
   const [severityFilter, setSeverityFilter] = useState<string | null>(null);
 
-  const criticalCount = anomaliesData.filter((a) => a.severity === "Critical")
-    .length;
-  const criticalSeverityCount = anomaliesData.filter(
-    (a) => a.severity === "Critical"
-  ).length;
+  const criticalCount = anomalies.filter((a) => a.severity === "Critical").length;
+  const warningCount = anomalies.filter((a) => a.severity === "Warning").length;
 
-  const filteredData = anomaliesData.filter((item) => {
+  const filteredData = anomalies.filter((item) => {
     const matchesSearch =
       item.state.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.severity.toLowerCase().includes(searchTerm.toLowerCase());
@@ -115,33 +105,20 @@ const AnomalyDetection: React.FC = () => {
           <GradientCard
             icon="🔍"
             label="Anomalies Detected"
-            value={anomaliesData.length}
+            value={anomalies.length}
             gradient="orange"
           />
           <GradientCard
             icon="🚨"
             label="Critical Severity"
-            value={criticalSeverityCount}
+            value={criticalCount}
             gradient="red"
           />
         </div>
         <p className="text-center text-gray-600 mt-4">
-          Across <span className="font-bold text-aadhaar-blue">12 states</span>{" "}
+          Across <span className="font-bold text-aadhaar-blue">{new Set(anomalies.map(a => a.state)).size} states</span>{" "}
           requiring immediate attention
         </p>
-      </section>
-
-      {/* Anomaly Timeline */}
-      <section className="mb-12">
-        <SectionHeader
-          title="Anomaly Timeline"
-          subtitle="Temporal distribution of detected anomalies"
-        />
-        <ChartPlaceholder
-          title="Scatter Plot: Time vs Update Rate"
-          description="X-axis: Time (months), Y-axis: Update Rate, Points colored by severity (red = critical, orange = warning), Size = enrolment volume"
-          height="450px"
-        />
       </section>
 
       {/* Search and Filter */}
@@ -194,9 +171,9 @@ const AnomalyDetection: React.FC = () => {
                 <th className="px-4 py-3 text-left font-bold">State</th>
                 <th className="px-4 py-3 text-left font-bold">Year</th>
                 <th className="px-4 py-3 text-left font-bold">Month</th>
-                <th className="px-4 py-3 text-left font-bold">Update Rate</th>
+                <th className="px-4 py-3 text-left font-bold">Update Rate (%)</th>
                 <th className="px-4 py-3 text-left font-bold">Severity</th>
-                <th className="px-4 py-3 text-left font-bold">Enrolments</th>
+                <th className="px-4 py-3 text-left font-bold">Affected Enrolments</th>
               </tr>
             </thead>
             <tbody>
@@ -214,7 +191,7 @@ const AnomalyDetection: React.FC = () => {
                   <td className="px-4 py-3">{item.month}</td>
                   <td className="px-4 py-3">
                     <span className="font-semibold text-red-600">
-                      {(item.updateRate * 100).toFixed(1)}%
+                      {item.updateRate.toFixed(1)}%
                     </span>
                   </td>
                   <td className="px-4 py-3">
@@ -227,7 +204,7 @@ const AnomalyDetection: React.FC = () => {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {(item.enrolments / 1000).toFixed(0)}K
+                    {(item.enrolments / 1000).toFixed(1)}K
                   </td>
                 </tr>
               ))}
