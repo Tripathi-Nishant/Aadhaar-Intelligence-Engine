@@ -50,8 +50,10 @@ export const PerformanceBarChart: React.FC<PerformanceBarChartProps> = ({
             tick={{ fontSize: 12 }}
           />
           <Tooltip
-            formatter={(value) => (
-              <span className="font-semibold">{value.toFixed(1)}</span>
+            formatter={(value: any) => (
+              <span className="font-semibold">
+                {typeof value === "number" ? value.toFixed(1) : value}
+              </span>
             )}
             contentStyle={{
               backgroundColor: "white",
