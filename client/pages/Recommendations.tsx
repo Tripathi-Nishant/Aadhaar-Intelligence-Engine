@@ -76,7 +76,11 @@ function generateRecommendations(): Recommendation[] {
   stateMetrics.forEach((metric) => {
     if (metric.healthScore < 45) {
       // Critical priority
-      const action = criticalActions[recommendations.filter(r => r.priority === "Critical").length % criticalActions.length];
+      const action =
+        criticalActions[
+          recommendations.filter((r) => r.priority === "Critical").length %
+            criticalActions.length
+        ];
       recommendations.push({
         id: id++,
         state: metric.state,
@@ -86,7 +90,11 @@ function generateRecommendations(): Recommendation[] {
       });
     } else if (metric.healthScore < 60) {
       // High priority
-      const action = highActions[recommendations.filter(r => r.priority === "High").length % highActions.length];
+      const action =
+        highActions[
+          recommendations.filter((r) => r.priority === "High").length %
+            highActions.length
+        ];
       recommendations.push({
         id: id++,
         state: metric.state,
@@ -115,23 +123,21 @@ const Recommendations: React.FC = () => {
     setSelectedPriorities((prev) =>
       prev.includes(priority)
         ? prev.filter((p) => p !== priority)
-        : [...prev, priority]
+        : [...prev, priority],
     );
   };
 
   const criticalCount = recommendations.filter(
-    (r) => r.priority === "Critical"
+    (r) => r.priority === "Critical",
   ).length;
-  const highCount = recommendations.filter(
-    (r) => r.priority === "High"
-  ).length;
+  const highCount = recommendations.filter((r) => r.priority === "High").length;
   const totalInvestment = recommendations.reduce((sum, r) => {
     const amount = parseInt(r.cost.replace(/[₹\s]/g, ""));
     return sum + amount;
   }, 0);
 
   const filteredData = recommendations.filter((r) =>
-    selectedPriorities.includes(r.priority)
+    selectedPriorities.includes(r.priority),
   );
 
   const getPriorityColor = (priority: string) => {
@@ -210,7 +216,9 @@ const Recommendations: React.FC = () => {
                 <th className="px-4 py-3 text-left font-bold">Priority</th>
                 <th className="px-4 py-3 text-left font-bold">Category</th>
                 <th className="px-4 py-3 text-left font-bold">Action</th>
-                <th className="px-4 py-3 text-left font-bold">Expected Impact</th>
+                <th className="px-4 py-3 text-left font-bold">
+                  Expected Impact
+                </th>
                 <th className="px-4 py-3 text-left font-bold">Cost</th>
                 <th className="px-4 py-3 text-left font-bold">Timeline</th>
               </tr>
@@ -232,8 +240,8 @@ const Recommendations: React.FC = () => {
                         rec.healthScore > 70
                           ? "text-aadhaar-green"
                           : rec.healthScore > 50
-                          ? "text-aadhaar-orange"
-                          : "text-red-600"
+                            ? "text-aadhaar-orange"
+                            : "text-red-600"
                       }`}
                     >
                       {rec.healthScore.toFixed(1)}
@@ -242,7 +250,7 @@ const Recommendations: React.FC = () => {
                   <td className="px-4 py-3">
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-semibold ${getPriorityColor(
-                        rec.priority
+                        rec.priority,
                       )}`}
                     >
                       {rec.priority}
@@ -277,9 +285,7 @@ const Recommendations: React.FC = () => {
 
       {/* Download Button */}
       <section className="flex justify-center">
-        <Button
-          className="bg-gradient-to-r from-aadhaar-orange to-yellow-500 hover:from-aadhaar-blue hover:to-blue-700 text-white px-8 py-3 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
-        >
+        <Button className="bg-gradient-to-r from-aadhaar-orange to-yellow-500 hover:from-aadhaar-blue hover:to-blue-700 text-white px-8 py-3 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300">
           📥 Download Recommendations
         </Button>
       </section>

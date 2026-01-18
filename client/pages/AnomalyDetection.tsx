@@ -17,8 +17,20 @@ interface Anomaly {
 function generateAnomalies(): Anomaly[] {
   const stateMetrics = getStateMetrics();
   const anomalies: Anomaly[] = [];
-  const months = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"];
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   let id = 1;
 
@@ -35,7 +47,7 @@ function generateAnomalies(): Anomaly[] {
         enrolments: Math.floor(metric.totalEnrolments * 0.1),
       });
     }
-    
+
     // Low friction index (< 0.1) but high enrolments could be anomaly
     if (metric.frictionIndex < 0.1 && metric.totalEnrolments > 50000) {
       anomalies.push({
@@ -75,15 +87,16 @@ const AnomalyDetection: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [severityFilter, setSeverityFilter] = useState<string | null>(null);
 
-  const criticalCount = anomalies.filter((a) => a.severity === "Critical").length;
+  const criticalCount = anomalies.filter(
+    (a) => a.severity === "Critical",
+  ).length;
   const warningCount = anomalies.filter((a) => a.severity === "Warning").length;
 
   const filteredData = anomalies.filter((item) => {
     const matchesSearch =
       item.state.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.severity.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesSeverity =
-      !severityFilter || item.severity === severityFilter;
+    const matchesSeverity = !severityFilter || item.severity === severityFilter;
     return matchesSearch && matchesSeverity;
   });
 
@@ -116,7 +129,10 @@ const AnomalyDetection: React.FC = () => {
           />
         </div>
         <p className="text-center text-gray-600 mt-4">
-          Across <span className="font-bold text-aadhaar-blue">{new Set(anomalies.map(a => a.state)).size} states</span>{" "}
+          Across{" "}
+          <span className="font-bold text-aadhaar-blue">
+            {new Set(anomalies.map((a) => a.state)).size} states
+          </span>{" "}
           requiring immediate attention
         </p>
       </section>
@@ -171,9 +187,13 @@ const AnomalyDetection: React.FC = () => {
                 <th className="px-4 py-3 text-left font-bold">State</th>
                 <th className="px-4 py-3 text-left font-bold">Year</th>
                 <th className="px-4 py-3 text-left font-bold">Month</th>
-                <th className="px-4 py-3 text-left font-bold">Update Rate (%)</th>
+                <th className="px-4 py-3 text-left font-bold">
+                  Update Rate (%)
+                </th>
                 <th className="px-4 py-3 text-left font-bold">Severity</th>
-                <th className="px-4 py-3 text-left font-bold">Affected Enrolments</th>
+                <th className="px-4 py-3 text-left font-bold">
+                  Affected Enrolments
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -197,7 +217,7 @@ const AnomalyDetection: React.FC = () => {
                   <td className="px-4 py-3">
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-semibold ${getSeverityColor(
-                        item.severity
+                        item.severity,
                       )}`}
                     >
                       {item.severity}
