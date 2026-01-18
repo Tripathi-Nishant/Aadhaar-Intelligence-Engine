@@ -2,71 +2,109 @@ import React, { useState } from "react";
 import { DashboardLayout } from "@/components/Layout";
 import { GradientCard, SectionHeader } from "@/components/AadhaarUI";
 import { Button } from "@/components/ui/button";
+import { getStateMetrics } from "@/lib/aadhaarData";
 
-const recommendationsData = [
-  {
-    id: 1,
-    state: "Bihar",
-    priority: "Critical",
-    category: "Enrolment Quality",
-    action: "Establish mobile enrolment camps",
-    impact: "15% improvement expected",
-    cost: "₹45 Lakhs",
-    timeline: "Q1 2025",
-  },
-  {
-    id: 2,
-    state: "Jharkhand",
-    priority: "Critical",
-    category: "Update Rate",
-    action: "Deploy biometric update centers",
-    impact: "25% increase in updates",
-    cost: "₹62 Lakhs",
-    timeline: "Q1 2025",
-  },
-  {
-    id: 3,
-    state: "Assam",
-    priority: "Critical",
-    category: "Infrastructure",
-    action: "Upgrade authentication infrastructure",
-    impact: "35% reduction in friction",
-    cost: "₹78 Lakhs",
-    timeline: "Q2 2025",
-  },
-  {
-    id: 4,
-    state: "Manipur",
-    priority: "High",
-    category: "Training",
-    action: "Conduct operator training programs",
-    impact: "20% improvement in data quality",
-    cost: "₹28 Lakhs",
-    timeline: "Q1 2025",
-  },
-  {
-    id: 5,
-    state: "Meghalaya",
-    priority: "High",
-    category: "Enrolment",
-    action: "Incentivize child enrolment",
-    impact: "12% increase in CER",
-    cost: "₹35 Lakhs",
-    timeline: "Q1 2025",
-  },
-  {
-    id: 6,
-    state: "Mizoram",
-    priority: "High",
-    category: "Technology",
-    action: "Implement advanced analytics",
-    impact: "Real-time anomaly detection",
-    cost: "₹42 Lakhs",
-    timeline: "Q2 2025",
-  },
-];
+interface Recommendation {
+  id: number;
+  state: string;
+  priority: "Critical" | "High" | "Medium";
+  category: string;
+  action: string;
+  impact: string;
+  cost: string;
+  timeline: string;
+  healthScore: number;
+}
+
+// Generate recommendations based on health scores
+function generateRecommendations(): Recommendation[] {
+  const stateMetrics = getStateMetrics();
+  const recommendations: Recommendation[] = [];
+  let id = 1;
+
+  const criticalActions = [
+    {
+      category: "Infrastructure",
+      action: "Deploy mobile biometric centers",
+      impact: "30% improvement in enrolment rate",
+      cost: "₹75 Lakhs",
+      timeline: "Q1 2025",
+    },
+    {
+      category: "Training",
+      action: "Intensive operator training program",
+      impact: "25% reduction in rejection rate",
+      cost: "₹45 Lakhs",
+      timeline: "Q1 2025",
+    },
+    {
+      category: "Technology",
+      action: "Upgrade biometric devices",
+      impact: "40% faster authentication",
+      cost: "₹95 Lakhs",
+      timeline: "Q2 2025",
+    },
+  ];
+
+  const highActions = [
+    {
+      category: "Process Optimization",
+      action: "Streamline update workflows",
+      impact: "15% increase in throughput",
+      cost: "₹35 Lakhs",
+      timeline: "Q1 2025",
+    },
+    {
+      category: "Quality Assurance",
+      action: "Enhanced data validation",
+      impact: "20% reduction in errors",
+      cost: "₹28 Lakhs",
+      timeline: "Q1 2025",
+    },
+  ];
+
+  const mediumActions = [
+    {
+      category: "Monitoring",
+      action: "Real-time performance dashboard",
+      impact: "Better visibility & control",
+      cost: "₹15 Lakhs",
+      timeline: "Q1 2025",
+    },
+  ];
+
+  stateMetrics.forEach((metric) => {
+    if (metric.healthScore < 45) {
+      // Critical priority
+      const action = criticalActions[recommendations.filter(r => r.priority === "Critical").length % criticalActions.length];
+      recommendations.push({
+        id: id++,
+        state: metric.state,
+        priority: "Critical",
+        ...action,
+        healthScore: metric.healthScore,
+      });
+    } else if (metric.healthScore < 60) {
+      // High priority
+      const action = highActions[recommendations.filter(r => r.priority === "High").length % highActions.length];
+      recommendations.push({
+        id: id++,
+        state: metric.state,
+        priority: "High",
+        ...action,
+        healthScore: metric.healthScore,
+      });
+    }
+  });
+
+  return recommendations.sort((a, b) => {
+    const priorityOrder = { Critical: 0, High: 1, Medium: 2 };
+    return priorityOrder[a.priority] - priorityOrder[b.priority];
+  });
+}
 
 const Recommendations: React.FC = () => {
+  const recommendations = generateRecommendations();
   const [selectedPriorities, setSelectedPriorities] = useState<string[]>([
     "Critical",
     "High",
@@ -81,15 +119,18 @@ const Recommendations: React.FC = () => {
     );
   };
 
-  const criticalCount = recommendationsData.filter(
+  const criticalCount = recommendations.filter(
     (r) => r.priority === "Critical"
   ).length;
-  const highCount = recommendationsData.filter(
+  const highCount = recommendations.filter(
     (r) => r.priority === "High"
   ).length;
-  const totalInvestment = 390; // Lakhs
+  const totalInvestment = recommendations.reduce((sum, r) => {
+    const amount = parseInt(r.cost.replace(/[₹\s]/g, ""));
+    return sum + amount;
+  }, 0);
 
-  const filteredData = recommendationsData.filter((r) =>
+  const filteredData = recommendations.filter((r) =>
     selectedPriorities.includes(r.priority)
   );
 
@@ -165,6 +206,7 @@ const Recommendations: React.FC = () => {
             <thead>
               <tr className="bg-gradient-to-r from-aadhaar-blue to-blue-800 text-white">
                 <th className="px-4 py-3 text-left font-bold">State</th>
+                <th className="px-4 py-3 text-left font-bold">Health Score</th>
                 <th className="px-4 py-3 text-left font-bold">Priority</th>
                 <th className="px-4 py-3 text-left font-bold">Category</th>
                 <th className="px-4 py-3 text-left font-bold">Action</th>
@@ -183,6 +225,19 @@ const Recommendations: React.FC = () => {
                 >
                   <td className="px-4 py-3 font-semibold text-gray-800">
                     {rec.state}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`font-bold ${
+                        rec.healthScore > 70
+                          ? "text-aadhaar-green"
+                          : rec.healthScore > 50
+                          ? "text-aadhaar-orange"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {rec.healthScore.toFixed(1)}
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     <span
@@ -213,6 +268,11 @@ const Recommendations: React.FC = () => {
             </tbody>
           </table>
         </div>
+        {filteredData.length === 0 && (
+          <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
+            No recommendations for selected priorities
+          </div>
+        )}
       </section>
 
       {/* Download Button */}
