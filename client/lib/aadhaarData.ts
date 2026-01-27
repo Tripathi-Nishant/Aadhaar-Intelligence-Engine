@@ -1791,23 +1791,32 @@ function calculateEQI(bioUpdates: number, totalEnrolments: number): number {
   }
 }
 
-// Calculate Friction Index - more realistic
+// Calculate Friction Index - realistic based on update rates
 function calculateFrictionIndex(
   bioUpdates: number,
   totalEnrolments: number,
 ): number {
   if (totalEnrolments === 0) return 0.5;
 
-  // Friction index represents how difficult the system is to use
-  // High bio updates relative to enrolments = higher friction
-  const updateRate = bioUpdates / Math.max(1, totalEnrolments);
+  // Friction index measures operational difficulty
+  // High update rates = citizens facing challenges = high friction
+  const updateRate = (bioUpdates / Math.max(1, totalEnrolments)) * 100; // Convert to percentage
 
-  // Use logarithmic scale similar to EQI
-  // Maps: 0 -> 0.0, 1 -> 0.22, 10 -> 0.5, 100 -> 0.77, 1000+ -> near 1.0
-  const normalizedRate = Math.log10(Math.max(1, updateRate)) / 10;
-  const friction = Math.min(1, normalizedRate);
+  // Direct mapping to friction:
+  // 0-20% -> Low friction (0.1-0.2)
+  // 20-100% -> Medium friction (0.2-0.5)
+  // 100-300% -> High friction (0.5-0.8)
+  // 300%+ -> Very high friction (0.8+)
 
-  return Math.max(0, Math.min(1, friction));
+  if (updateRate <= 20) {
+    return 0.15;
+  } else if (updateRate <= 100) {
+    return 0.15 + ((updateRate - 20) / 80) * 0.35;
+  } else if (updateRate <= 300) {
+    return 0.50 + ((updateRate - 100) / 200) * 0.30;
+  } else {
+    return Math.min(1, 0.80 + ((updateRate - 300) / 500) * 0.20);
+  }
 }
 
 // Calculate CER (Child Enrolment Ratio)
