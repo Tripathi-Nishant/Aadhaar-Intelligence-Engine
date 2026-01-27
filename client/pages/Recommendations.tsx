@@ -74,8 +74,8 @@ function generateRecommendations(): Recommendation[] {
   ];
 
   stateMetrics.forEach((metric) => {
-    if (metric.healthScore < 45) {
-      // Critical priority
+    if (metric.healthScore < 35) {
+      // Critical priority - states needing urgent intervention
       const action =
         criticalActions[
           recommendations.filter((r) => r.priority === "Critical").length %
@@ -88,8 +88,8 @@ function generateRecommendations(): Recommendation[] {
         ...action,
         healthScore: metric.healthScore,
       });
-    } else if (metric.healthScore < 60) {
-      // High priority
+    } else if (metric.healthScore < 55) {
+      // High priority - states needing improvement
       const action =
         highActions[
           recommendations.filter((r) => r.priority === "High").length %
@@ -100,6 +100,19 @@ function generateRecommendations(): Recommendation[] {
         state: metric.state,
         priority: "High",
         ...action,
+        healthScore: metric.healthScore,
+      });
+    } else if (metric.healthScore < 75) {
+      // Medium priority - states that can be optimized further
+      recommendations.push({
+        id: id++,
+        state: metric.state,
+        priority: "Medium",
+        category: "Optimization",
+        action: "Continuous performance monitoring and fine-tuning",
+        impact: "5-10% further improvement",
+        cost: "₹8 Lakhs",
+        timeline: "Ongoing",
         healthScore: metric.healthScore,
       });
     }
