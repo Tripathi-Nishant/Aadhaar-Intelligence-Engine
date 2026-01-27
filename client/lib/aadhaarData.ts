@@ -1764,9 +1764,17 @@ function calculateHealthScore(
 // Calculate EQI (Enrolment Quality Index) - more realistic
 function calculateEQI(bioUpdates: number, totalEnrolments: number): number {
   if (totalEnrolments === 0) return 1;
-  const ratio = bioUpdates / totalEnrolments;
-  // Normalize to 0-1 range (high bio update rate = low quality)
-  return Math.max(0, Math.min(1, 1 - Math.min(ratio, 1)));
+
+  // Convert biometric update rate (which can be >100%) to a quality score
+  // High update rate = more citizens needed to update = lower quality
+  const updateRate = bioUpdates / Math.max(1, totalEnrolments);
+
+  // Use logarithmic scale to normalize extremely high values
+  // Maps: 0 -> 1.0, 1 -> 0.78, 10 -> 0.5, 100 -> 0.23, 1000+ -> near 0
+  const normalizedRate = Math.log10(Math.max(1, updateRate)) / 10;
+  const eqi = Math.max(0.1, 1 - normalizedRate);
+
+  return Math.max(0, Math.min(1, eqi));
 }
 
 // Calculate Friction Index - more realistic
