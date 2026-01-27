@@ -144,7 +144,9 @@ const Recommendations: React.FC = () => {
     (r) => r.priority === "Critical",
   ).length;
   const highCount = recommendations.filter((r) => r.priority === "High").length;
-  const mediumCount = recommendations.filter((r) => r.priority === "Medium").length;
+  const mediumCount = recommendations.filter(
+    (r) => r.priority === "Medium",
+  ).length;
   const stateMetrics = getStateMetrics();
   const totalStates = stateMetrics.length;
   const healthyStates = stateMetrics.filter((s) => s.healthScore >= 75).length;
@@ -204,10 +206,13 @@ const Recommendations: React.FC = () => {
         </div>
         <div className="mt-6 bg-blue-50 rounded-lg p-6 border-l-4 border-aadhaar-blue">
           <p className="text-sm text-gray-700 mb-2">
-            <span className="font-bold">Total Investment Required:</span> ₹{totalInvestment} Lakhs
+            <span className="font-bold">Total Investment Required:</span> ₹
+            {totalInvestment} Lakhs
           </p>
           <p className="text-sm text-gray-600">
-            Recommended timeline: {totalInvestment > 100 ? "6-9 months" : "3-6 months"} for full implementation
+            Recommended timeline:{" "}
+            {totalInvestment > 100 ? "6-9 months" : "3-6 months"} for full
+            implementation
           </p>
         </div>
       </section>
@@ -314,7 +319,8 @@ const Recommendations: React.FC = () => {
               Excellent Performance!
             </h3>
             <p className="text-gray-600">
-              All states meet or exceed the {selectedPriorities.join(", ").toLowerCase()} priority thresholds.
+              All states meet or exceed the{" "}
+              {selectedPriorities.join(", ").toLowerCase()} priority thresholds.
               Continue monitoring and maintain current operational excellence.
             </p>
           </div>

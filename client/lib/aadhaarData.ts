@@ -1783,11 +1783,11 @@ function calculateEQI(bioUpdates: number, totalEnrolments: number): number {
   } else if (updateRate <= 50) {
     return 0.95 - ((updateRate - 10) / 40) * 0.25;
   } else if (updateRate <= 100) {
-    return 0.70 - ((updateRate - 50) / 50) * 0.20;
+    return 0.7 - ((updateRate - 50) / 50) * 0.2;
   } else if (updateRate <= 300) {
-    return 0.50 - ((updateRate - 100) / 200) * 0.30;
+    return 0.5 - ((updateRate - 100) / 200) * 0.3;
   } else {
-    return Math.max(0, 0.20 - ((updateRate - 300) / 500) * 0.20);
+    return Math.max(0, 0.2 - ((updateRate - 300) / 500) * 0.2);
   }
 }
 
@@ -1813,9 +1813,9 @@ function calculateFrictionIndex(
   } else if (updateRate <= 100) {
     return 0.15 + ((updateRate - 20) / 80) * 0.35;
   } else if (updateRate <= 300) {
-    return 0.50 + ((updateRate - 100) / 200) * 0.30;
+    return 0.5 + ((updateRate - 100) / 200) * 0.3;
   } else {
-    return Math.min(1, 0.80 + ((updateRate - 300) / 500) * 0.20);
+    return Math.min(1, 0.8 + ((updateRate - 300) / 500) * 0.2);
   }
 }
 

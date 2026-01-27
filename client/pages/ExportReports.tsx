@@ -23,13 +23,18 @@ const ExportReports: React.FC = () => {
   const handleExportStateRankings = () => {
     try {
       const metrics = getStateMetrics();
-      let csv = "Rank,State,Health Score,Total Enrolments,EQI,Friction Index,Children Ratio\n";
+      let csv =
+        "Rank,State,Health Score,Total Enrolments,EQI,Friction Index,Children Ratio\n";
 
       metrics.forEach((state, index) => {
         csv += `${index + 1},"${state.state}",${state.healthScore.toFixed(2)},${state.totalEnrolments},${state.eqi.toFixed(2)},${state.frictionIndex.toFixed(2)},${state.childEnrolmentRatio.toFixed(2)}\n`;
       });
 
-      downloadFile(csv, "State_Rankings_" + new Date().toISOString().split('T')[0] + ".csv", "text/csv");
+      downloadFile(
+        csv,
+        "State_Rankings_" + new Date().toISOString().split("T")[0] + ".csv",
+        "text/csv",
+      );
     } catch (error) {
       toast.error("❌ Error exporting state rankings");
       console.error(error);
@@ -41,7 +46,7 @@ const ExportReports: React.FC = () => {
     try {
       const metrics = getStateMetrics();
       const anomalies = metrics.filter(
-        (state) => state.healthScore < 40 || state.frictionIndex > 0.7
+        (state) => state.healthScore < 40 || state.frictionIndex > 0.7,
       );
 
       let csv = "State,Health Score,Friction Index,Issue Type,Severity\n";
@@ -63,7 +68,11 @@ const ExportReports: React.FC = () => {
         csv += `"${state.state}",${state.healthScore.toFixed(2)},${state.frictionIndex.toFixed(2)},"${issue}",${severity}\n`;
       });
 
-      downloadFile(csv, "Anomalies_Report_" + new Date().toISOString().split('T')[0] + ".csv", "text/csv");
+      downloadFile(
+        csv,
+        "Anomalies_Report_" + new Date().toISOString().split("T")[0] + ".csv",
+        "text/csv",
+      );
     } catch (error) {
       toast.error("❌ Error exporting anomalies");
       console.error(error);
@@ -76,7 +85,8 @@ const ExportReports: React.FC = () => {
       const metrics = getStateMetrics();
       const recommendations = metrics.filter((state) => state.healthScore < 60);
 
-      let csv = "State,Health Score,Priority,Recommended Action,Investment (Lakhs),Expected Impact\n";
+      let csv =
+        "State,Health Score,Priority,Recommended Action,Investment (Lakhs),Expected Impact\n";
 
       recommendations.forEach((state) => {
         let priority = "Medium";
@@ -99,7 +109,11 @@ const ExportReports: React.FC = () => {
         csv += `"${state.state}",${state.healthScore.toFixed(2)},${priority},"${action}",${investment},${impact}\n`;
       });
 
-      downloadFile(csv, "Recommendations_" + new Date().toISOString().split('T')[0] + ".csv", "text/csv");
+      downloadFile(
+        csv,
+        "Recommendations_" + new Date().toISOString().split("T")[0] + ".csv",
+        "text/csv",
+      );
     } catch (error) {
       toast.error("❌ Error exporting recommendations");
       console.error(error);
@@ -168,7 +182,11 @@ Report Generated: ${new Date().toLocaleString()}
 System: Aadhaar System Intelligence Engine v1.0.0
 `;
 
-      downloadFile(summary, "Executive_Summary_" + new Date().toISOString().split('T')[0] + ".txt", "text/plain");
+      downloadFile(
+        summary,
+        "Executive_Summary_" + new Date().toISOString().split("T")[0] + ".txt",
+        "text/plain",
+      );
     } catch (error) {
       toast.error("❌ Error exporting executive summary");
       console.error(error);
@@ -209,7 +227,9 @@ TABLE OF CONTENTS
       const avgHealthScore = (
         metrics.reduce((sum, s) => sum + s.healthScore, 0) / metrics.length
       ).toFixed(2);
-      const avgEqi = (metrics.reduce((sum, s) => sum + s.eqi, 0) / metrics.length).toFixed(2);
+      const avgEqi = (
+        metrics.reduce((sum, s) => sum + s.eqi, 0) / metrics.length
+      ).toFixed(2);
       const avgFriction = (
         metrics.reduce((sum, s) => sum + s.frictionIndex, 0) / metrics.length
       ).toFixed(2);
@@ -240,30 +260,46 @@ Total Enrolments: ${metrics.reduce((sum, s) => sum + s.totalEnrolments, 0).toLoc
 EXCELLENT (Score 80-100):
 `;
       const excellent = metrics.filter((s) => s.healthScore >= 80);
-      report += excellent.length > 0
-        ? excellent.map((s) => `• ${s.state}: ${s.healthScore.toFixed(2)}`).join("\n")
-        : "• None\n";
+      report +=
+        excellent.length > 0
+          ? excellent
+              .map((s) => `• ${s.state}: ${s.healthScore.toFixed(2)}`)
+              .join("\n")
+          : "• None\n";
 
       report += `\nGOOD (Score 60-79):
 `;
-      const good = metrics.filter((s) => s.healthScore >= 60 && s.healthScore < 80);
-      report += good.length > 0
-        ? good.map((s) => `• ${s.state}: ${s.healthScore.toFixed(2)}`).join("\n")
-        : "• None\n";
+      const good = metrics.filter(
+        (s) => s.healthScore >= 60 && s.healthScore < 80,
+      );
+      report +=
+        good.length > 0
+          ? good
+              .map((s) => `• ${s.state}: ${s.healthScore.toFixed(2)}`)
+              .join("\n")
+          : "• None\n";
 
       report += `\nAVERAGE (Score 40-59):
 `;
-      const average = metrics.filter((s) => s.healthScore >= 40 && s.healthScore < 60);
-      report += average.length > 0
-        ? average.map((s) => `• ${s.state}: ${s.healthScore.toFixed(2)}`).join("\n")
-        : "• None\n";
+      const average = metrics.filter(
+        (s) => s.healthScore >= 40 && s.healthScore < 60,
+      );
+      report +=
+        average.length > 0
+          ? average
+              .map((s) => `• ${s.state}: ${s.healthScore.toFixed(2)}`)
+              .join("\n")
+          : "• None\n";
 
       report += `\nPOOR (Score Below 40) - CRITICAL:
 `;
       const poor = metrics.filter((s) => s.healthScore < 40);
-      report += poor.length > 0
-        ? poor.map((s) => `• ${s.state}: ${s.healthScore.toFixed(2)}`).join("\n")
-        : "• None\n";
+      report +=
+        poor.length > 0
+          ? poor
+              .map((s) => `• ${s.state}: ${s.healthScore.toFixed(2)}`)
+              .join("\n")
+          : "• None\n";
 
       report += `\n
 ────────────────────────────────────────────────────────────────────────────
@@ -393,7 +429,11 @@ End of Report
 ════════════════════════════════════════════════════════════════════════════
 `;
 
-      downloadFile(report, "Full_Analysis_" + new Date().toISOString().split('T')[0] + ".txt", "text/plain");
+      downloadFile(
+        report,
+        "Full_Analysis_" + new Date().toISOString().split("T")[0] + ".txt",
+        "text/plain",
+      );
     } catch (error) {
       toast.error("❌ Error exporting full analysis");
       console.error(error);
@@ -457,7 +497,9 @@ End of Report
           {/* Right Column - Summary Reports */}
           <div>
             <div className="bg-gradient-to-r from-aadhaar-green to-emerald-700 rounded-lg p-4 mb-6 border-l-4 border-aadhaar-saffron">
-              <h3 className="text-white font-bold text-lg">📄 Summary Reports</h3>
+              <h3 className="text-white font-bold text-lg">
+                📄 Summary Reports
+              </h3>
             </div>
             <div className="space-y-4">
               <Button
@@ -514,9 +556,9 @@ End of Report
             </div>
             <p className="text-gray-700 text-sm">
               Quantifies operational friction in the system. Reflects failed
-              authentications and failed enrolments. Lower values indicate smoother
-              operations. Critical for understanding user experience and system
-              reliability.
+              authentications and failed enrolments. Lower values indicate
+              smoother operations. Critical for understanding user experience
+              and system reliability.
             </p>
           </div>
 
@@ -527,14 +569,15 @@ End of Report
             </h3>
             <div className="bg-gray-50 rounded p-3 mb-3 overflow-x-auto">
               <code className="text-sm text-gray-800 font-mono">
-                Health Score = (0.4 × EQI + 0.4 × (1 - Friction) + 0.2 × CER) × 100
+                Health Score = (0.4 × EQI + 0.4 × (1 - Friction) + 0.2 × CER) ×
+                100
               </code>
             </div>
             <p className="text-gray-700 text-sm">
               Comprehensive metric combining quality, friction, and enrolment
               efforts. Weighted formula prioritizes data quality and operational
-              smoothness. Scores above 70 indicate healthy systems, 50-70 require
-              attention, and below 50 need urgent intervention.
+              smoothness. Scores above 70 indicate healthy systems, 50-70
+              require attention, and below 50 need urgent intervention.
             </p>
           </div>
 
