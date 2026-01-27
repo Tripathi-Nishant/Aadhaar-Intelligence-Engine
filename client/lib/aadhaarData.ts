@@ -1761,20 +1761,34 @@ function calculateHealthScore(
   return Math.max(0, Math.min(100, score));
 }
 
-// Calculate EQI (Enrolment Quality Index) - more realistic
+// Calculate EQI (Enrolment Quality Index) - realistic based on update rates
 function calculateEQI(bioUpdates: number, totalEnrolments: number): number {
-  if (totalEnrolments === 0) return 1;
+  if (totalEnrolments === 0) return 0.5;
 
-  // Convert biometric update rate (which can be >100%) to a quality score
-  // High update rate = more citizens needed to update = lower quality
-  const updateRate = bioUpdates / Math.max(1, totalEnrolments);
+  // EQI is inversely proportional to biometric update rate
+  // High update rate (>200%) = very poor quality (EQI close to 0)
+  // Low update rate (<10%) = excellent quality (EQI close to 1)
 
-  // Use logarithmic scale to normalize extremely high values
-  // Maps: 0 -> 1.0, 1 -> 0.78, 10 -> 0.5, 100 -> 0.23, 1000+ -> near 0
-  const normalizedRate = Math.log10(Math.max(1, updateRate)) / 10;
-  const eqi = Math.max(0.1, 1 - normalizedRate);
+  const updateRate = (bioUpdates / Math.max(1, totalEnrolments)) * 100; // Convert to percentage
 
-  return Math.max(0, Math.min(1, eqi));
+  // Linear scale mapped to realistic ranges:
+  // 0-10% update rate -> EQI 0.9-1.0 (excellent)
+  // 10-50% update rate -> EQI 0.7-0.9 (good)
+  // 50-100% update rate -> EQI 0.5-0.7 (average)
+  // 100-300% update rate -> EQI 0.2-0.5 (poor)
+  // 300%+ update rate -> EQI 0-0.2 (critical)
+
+  if (updateRate <= 10) {
+    return 0.95;
+  } else if (updateRate <= 50) {
+    return 0.95 - ((updateRate - 10) / 40) * 0.25;
+  } else if (updateRate <= 100) {
+    return 0.70 - ((updateRate - 50) / 50) * 0.20;
+  } else if (updateRate <= 300) {
+    return 0.50 - ((updateRate - 100) / 200) * 0.30;
+  } else {
+    return Math.max(0, 0.20 - ((updateRate - 300) / 500) * 0.20);
+  }
 }
 
 // Calculate Friction Index - more realistic
