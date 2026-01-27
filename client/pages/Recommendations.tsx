@@ -290,8 +290,15 @@ const Recommendations: React.FC = () => {
           </table>
         </div>
         {filteredData.length === 0 && (
-          <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
-            No recommendations for selected priorities
+          <div className="text-center py-12 text-gray-600 bg-green-50 rounded-lg border-2 border-green-200">
+            <div className="text-4xl mb-4">✅</div>
+            <h3 className="text-xl font-bold text-aadhaar-green mb-2">
+              Excellent Performance!
+            </h3>
+            <p className="text-gray-600">
+              All states meet or exceed the {selectedPriorities.join(", ").toLowerCase()} priority thresholds.
+              Continue monitoring and maintain current operational excellence.
+            </p>
           </div>
         )}
       </section>
