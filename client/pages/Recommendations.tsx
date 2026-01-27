@@ -176,7 +176,7 @@ const Recommendations: React.FC = () => {
           title="Recommendations Summary"
           subtitle="Strategic interventions for system improvement"
         />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <GradientCard
             icon="🚨"
             label="Critical Priority"
@@ -190,11 +190,25 @@ const Recommendations: React.FC = () => {
             gradient="orange"
           />
           <GradientCard
-            icon="💰"
-            label="Total Investment"
-            value={`₹${totalInvestment}L`}
-            gradient="blue"
+            icon="🎯"
+            label="Medium Priority"
+            value={mediumCount}
+            gradient="yellow"
           />
+          <GradientCard
+            icon="✅"
+            label="Healthy States"
+            value={`${healthyStates}/${totalStates}`}
+            gradient="green"
+          />
+        </div>
+        <div className="mt-6 bg-blue-50 rounded-lg p-6 border-l-4 border-aadhaar-blue">
+          <p className="text-sm text-gray-700 mb-2">
+            <span className="font-bold">Total Investment Required:</span> ₹{totalInvestment} Lakhs
+          </p>
+          <p className="text-sm text-gray-600">
+            Recommended timeline: {totalInvestment > 100 ? "6-9 months" : "3-6 months"} for full implementation
+          </p>
         </div>
       </section>
 
