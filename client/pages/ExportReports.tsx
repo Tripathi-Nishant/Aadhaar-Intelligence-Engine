@@ -434,19 +434,19 @@ End of Report
             </div>
             <div className="space-y-4">
               <Button
-                onClick={() => handleDownload("State_Rankings.csv")}
+                onClick={handleExportStateRankings}
                 className="w-full bg-gradient-to-r from-aadhaar-orange to-yellow-500 hover:from-aadhaar-blue hover:to-blue-700 text-white py-6 rounded-lg font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 📈 State Rankings (CSV)
               </Button>
               <Button
-                onClick={() => handleDownload("Anomalies_Report.csv")}
+                onClick={handleExportAnomalies}
                 className="w-full bg-gradient-to-r from-aadhaar-orange to-yellow-500 hover:from-aadhaar-blue hover:to-blue-700 text-white py-6 rounded-lg font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 🚨 Anomalies Report (CSV)
               </Button>
               <Button
-                onClick={() => handleDownload("Recommendations.csv")}
+                onClick={handleExportRecommendations}
                 className="w-full bg-gradient-to-r from-aadhaar-orange to-yellow-500 hover:from-aadhaar-blue hover:to-blue-700 text-white py-6 rounded-lg font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 🎯 Recommendations (CSV)
