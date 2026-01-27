@@ -2,7 +2,7 @@ import React from "react";
 import { DashboardLayout } from "@/components/Layout";
 import { SectionHeader, InfoBox } from "@/components/AadhaarUI";
 import { Button } from "@/components/ui/button";
-import { getStateMetrics, getStateTimeSeries } from "@/lib/aadhaarData";
+import { getStateMetrics } from "@/lib/aadhaarData";
 import { toast } from "sonner";
 
 const ExportReports: React.FC = () => {
