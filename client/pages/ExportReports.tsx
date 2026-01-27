@@ -461,16 +461,16 @@ End of Report
             </div>
             <div className="space-y-4">
               <Button
-                onClick={() => handleDownload("Executive_Summary.txt")}
+                onClick={handleExportExecutiveSummary}
                 className="w-full bg-gradient-to-r from-aadhaar-green to-emerald-600 hover:from-aadhaar-blue hover:to-blue-700 text-white py-6 rounded-lg font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 📋 Executive Summary (TXT)
               </Button>
               <Button
-                onClick={() => handleDownload("Full_Analysis.pdf")}
+                onClick={handleExportFullAnalysis}
                 className="w-full bg-gradient-to-r from-aadhaar-green to-emerald-600 hover:from-aadhaar-blue hover:to-blue-700 text-white py-6 rounded-lg font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                📊 Full Analysis (PDF)
+                📊 Full Analysis (TXT)
               </Button>
             </div>
           </div>
