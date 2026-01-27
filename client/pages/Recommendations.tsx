@@ -144,6 +144,10 @@ const Recommendations: React.FC = () => {
     (r) => r.priority === "Critical",
   ).length;
   const highCount = recommendations.filter((r) => r.priority === "High").length;
+  const mediumCount = recommendations.filter((r) => r.priority === "Medium").length;
+  const stateMetrics = getStateMetrics();
+  const totalStates = stateMetrics.length;
+  const healthyStates = stateMetrics.filter((s) => s.healthScore >= 75).length;
   const totalInvestment = recommendations.reduce((sum, r) => {
     const amount = parseInt(r.cost.replace(/[₹\s]/g, ""));
     return sum + amount;
